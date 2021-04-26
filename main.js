@@ -65,7 +65,11 @@ const app = http.createServer(function (request, response) {
               list,
               `<h2>${title}</h2>${description}`,
               `<a href="/create">create</a>
-              <a href="/update?id=${title}">update</a>`
+              <a href="/update?id=${title}">update</a>
+              <form action="delete_process" method="post">
+                <input type="hidden" name="id" value="${title}">
+                <input type="submit" value="delete">
+              </form>`
             );
             response.writeHead(200);
             response.end(template);
@@ -144,6 +148,7 @@ const app = http.createServer(function (request, response) {
         });
       });
     });
+  } else if (pathname === '/delete_process') {
   } else {
     response.writeHead(404);
     response.end('Not found');
