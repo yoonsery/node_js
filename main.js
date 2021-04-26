@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const url = require('url');
+const qs = require('querystring');
 
 function templateHTML(title, list, body) {
   return `
@@ -76,7 +77,7 @@ const app = http.createServer(function (request, response) {
       const template = templateHTML(
         title,
         list,
-        `<form action="http://localhost:3000/process_create" method="post">
+        `<form action="http://localhost:3000/create_process" method="post">
           <p><input type="text" name="title" placeholder="title"/></p>
           <p><textarea name="description" placeholder="description"></textarea></p>
           <p><input type="submit" /></p>
@@ -85,6 +86,18 @@ const app = http.createServer(function (request, response) {
       response.writeHead(200);
       response.end(template);
     });
+  } else if (pathname === '/create_process') {
+    let body = '';
+    request.on('data', function (data) {
+      body += data;
+    });
+    request.on('end', function () {
+      const post = qs.parse(body);
+      const title = post.title;
+      const description = post.description;
+    });
+    response.writeHead(200);
+    response.end('success');
   } else {
     response.writeHead(404);
     response.end('Not found');
